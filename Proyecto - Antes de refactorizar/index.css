@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    background-color: #F09A3B;
+    backdrop-filter: blur(5px);
+    color: #fff;
+    height: 100vh;
+}
+
+.nav {
+    min-height: 15vh;
+    background-color: #0F1432;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: .625rem;
+}
+
+.nav__img--unsaac {
+    background: url(unsaac.png);
+}
+
+.nav__img--info {
+    background: url(info.png);
+}
+
+.nav__img {
+    height: 110px;
+    width: 110px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.nav__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav__text__h1 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+}
+
+.container {
+    background-color: #0F1432;
+    border-radius: 20px;
+    color: #fff;
+    box-shadow: 15px 15px 25px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container__h1 {
+    margin: 1.875rem;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.form {
+    max-width: 1000px ;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+}
+
+.form__container {
+    margin: 1.875rem;
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form__container__label {
+    margin: .4375rem;
+    font-size: 1rem;
+}
+
+.form__container__label--extra {
+    font-weight: 500;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.form__submit {
+    border-style: none;
+    border-radius: 4px;
+    font-size: 1.25rem;
+    transition: 500ms;
+    background-color:#0F1432;
+    color: #fff;
+    box-shadow: 10px 10px 25px rgba(0,0,0,0.6);
+    padding: .625rem 1.875rem;
+    position:absolute;
+    top: 19.375rem;
+}
+
+.form__submit:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+@media (max-width: 700px) {
+    * {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 500px) {
+    * {
+        font-size: 13px;
+    }
+}
+
