@@ -1,6 +1,4 @@
 <?php
-    /* XD */
-    
     // ====================================== VARIABLES GLOBALES ======================================
     $alumnos_no_tutoria = array();
     // cambiar nombre $alumnos_tutorados_2021-II
