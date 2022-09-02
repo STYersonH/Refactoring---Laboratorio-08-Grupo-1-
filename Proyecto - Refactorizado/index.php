@@ -23,35 +23,21 @@
                 
                 <div class="form__container">
 
-                    <label for="distribucionDocente" class="form__container__label">Cargar Distribución Docente de Tutorias en 2021-2</label><br>
+                    <label for="distribucionDocente" class="form__container__label">Cargar Distribución Docente de Tutorias </label><br>
                     <input id="distribucionDocente" type="file" accept=".csv" class="form__container__input" name="distribucionDocente" required>
                 </div>
                 
                 <div class="form__container">
-                    <label for="alumnos2022_1" class="form__container__label">Cargar Alumnos 2022-1</label><br>
-                    <input id="alumnos2022_1" type="file" accept=".csv" class="form__container__input" name="alumnos2022_1" required>
+                    <label for="alumnosMatriculados" class="form__container__label">Cargar Alumnos Matriculados del semestre actual</label><br>
+                    <input id="alumnosMatriculados" type="file" accept=".csv" class="form__container__input" name="alumnosMatriculados" required>
 
                 </div>
 
                 <div class="form__container">
-                    <label for="docentes2022_1" class="form__container__label">Cargar Docentes 2022-1</label><br>
-                    <input id="docentes2022_1" type="file" accept=".csv" class="form__container__input" name="docentes2022_1" required>
+                    <label for="docentesSemestreActual" class="form__container__label">Cargar Docentes del semestre actual</label><br>
+                    <input id="docentesSemestreActual" type="file" accept=".csv" class="form__container__input" name="docentesSemestreActual" required>
 
                 </div>
-
-                <!-- <div class="form__container">
-
-
-                    <label for="mostrar_no_tutorados" class="form__label">
-                        <input id="mostrar_no_tutorados" type="radio" name="mostrar" value="no_tutorados" class="form__radio" checked>
-                        Mostrar alumnos que no seran tutorados en 2022-1</label>
-
-                
-                    <label for="mostrar_nuevos_alumnos" class="form__container__label">
-                        <input id="mostrar_nuevos_alumnos" type="radio" name="mostrar" value="nuevos_alumnos" class="form__radio">
-                        Mostrar nuevos alumnos para tutoria</label>
-
-                </div> -->
 
                 <input type="submit" class="form__submit" value="►  Enviar">
 

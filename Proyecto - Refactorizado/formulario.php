@@ -1,7 +1,6 @@
 <?php
     // ====================================== VARIABLES GLOBALES ======================================
     $alumnos_no_tutoria = array();
-    // cambiar nombre $alumnos_tutorados_2021-II
     $alumnos_antiguos = array();
     $alumnos_disponibles = array(); //alumnos nuevos
 
@@ -52,8 +51,8 @@
     }
 
 
-    // Obtener arreglo de alumnos 2022_1
-    function ObtenerAlumnos_2022_1($file){
+    // Obtener arreglo de alumnos matriculados en el semestre actual
+    function ObtenerAlumnosMatriculados($file){
 
         $gestor = leerArchivo($file);
         //almacenar los codigos y nombres del archivo $file
@@ -69,8 +68,8 @@
         return $array_alumnos; 
     }
 
-    // Obtener arreglo de docentes 2022_1
-    function obtenerDocentes_2022_1($file){
+    // Obtener arreglo de docentes del semestre actual
+    function obtenerDocentesSemestreActual($file){
         $gestor = leerArchivo($file);
         //almacenar los codigos y nombres del archivo $file
         $array_docentes = [];
@@ -85,37 +84,36 @@
     }
 
     // Obtener arreglo de alumnos nuevos
-    function ObtenerAlumnos_nuevos($alumnos_2022_1){
+    function ObtenerAlumnos_nuevos($alumnosMatriculados){
         global $alumnos_antiguos;
         $alumnos_nuevos = [];
-        for ($i = 0; $i < count($alumnos_2022_1);$i++){
+        for ($i = 0; $i < count($alumnosMatriculados);$i++){
             $tieneTutoria = false;
             for ($j = 0; $j < count($alumnos_antiguos);$j++){
-                if ($alumnos_2022_1[$i]->codigo == $alumnos_antiguos[$j]->codigo){
+                if ($alumnosMatriculados[$i]->codigo == $alumnos_antiguos[$j]->codigo){
                     $tieneTutoria = true;
                 }
             }
             if (!$tieneTutoria){
-                $alumnos_2022_1[$i]->tieneTutoria = true;
-                array_push($alumnos_nuevos,$alumnos_2022_1[$i]);
+                $alumnosMatriculados[$i]->tieneTutoria = true;
+                array_push($alumnos_nuevos,$alumnosMatriculados[$i]);
             }            
         }
         return $alumnos_nuevos;
     }
 
-    // Buscar alumno en alumnos 2022-1
-    function buscar($codigoAlumno, $alumnos_2022_1) {
-        for ($i = 0; $i < count($alumnos_2022_1); $i++) {
-            if ($codigoAlumno == $alumnos_2022_1[$i]->codigo) {
+    // Buscar alumno en alumnos del semestre actual
+    function buscar($codigoAlumno, $alumnosMatriculados) {
+        for ($i = 0; $i < count($alumnosMatriculados); $i++) {
+            if ($codigoAlumno == $alumnosMatriculados[$i]->codigo) {
                 return true;
             }
         }
         return false;
     }
 
-    // OPTIMIZAR LA COHESION
     // Obtener arreglo de tutorias
-    function ObtenerArregloTutorias($file, $alumnos_2022_1){
+    function ObtenerArregloTutorias($file, $alumnosMatriculados){
         
         $gestor = leerArchivo($file);
         //almacenar los codigos y nombres del archivo $file
@@ -141,12 +139,12 @@
                 // Obtiene los alumnos del csv
                 else {
                     if ($code != '') {
-                        if (buscar($code,$alumnos_2022_1)) {
-                            $alumno = new alumno($code,$names);
+                        if (buscar($code,$alumnosMatriculados)) {
+                            $alumno = new alumno($code,utf8_encode($names));
                             array_push($alumnos,$alumno);
                         }
                         else {
-                            $alumno = new alumno($code,$names);
+                            $alumno = new alumno($code,utf8_encode($names));
                             array_push($alumnos_no_tutoria,$alumno);                            
                         }                        
                     }                
@@ -162,8 +160,6 @@
         return array_slice($array_tutorias, 1); 
     }
 
-    /* XD */
-
     //hay codigos que solo tienen menos de 6 cifras, este modulo agrega 0's antes
     function actualizarCodigosa6Digitos($array_alumnos){
         for($i = 0; $i < count($array_alumnos); $i++){
@@ -178,9 +174,9 @@
         return $array_alumnos;
     }
     
-    function obtenerPrefijosCodigos($alumnos_2022_1){
+    function obtenerPrefijosCodigos($alumnosMatriculados){
         $Codigos = [];
-        foreach($alumnos_2022_1 as $Alumno){
+        foreach($alumnosMatriculados as $Alumno){
             array_push($Codigos, $Alumno->codigo);
         }
 
@@ -211,13 +207,15 @@
             echo '</div>';
             echo '<div class="tabla__body">';
             for ($j = 0; $j < count($tutorias[$i]->alumnos);$j++){
+                $codigoAlmno = $tutorias[$i]->alumnos[$j]->codigo;
+                $nombreAlmno = $tutorias[$i]->alumnos[$j]->nombre;
                 if ($tutorias[$i]->alumnos[$j]->tieneTutoria == true){
-                    echo '<p class="tabla__body__p--nuevo">'.$tutorias[$i]->alumnos[$j]->codigo.'</p>';
-                    echo '<p class="tabla__body__p--nuevo">'.$tutorias[$i]->alumnos[$j]->nombre.'</p>';
+                    echo '<p class="tabla__body__p--nuevo">'.$codigoAlmno.'</p>';
+                    echo '<p class="tabla__body__p--nuevo">'.utf8_decode($nombreAlmno).'</p>';
                 }
                 else {  
-                    echo '<p class="tabla__body__p">'.$tutorias[$i]->alumnos[$j]->codigo.'</p>';
-                    echo '<p class="tabla__body__p">'.$tutorias[$i]->alumnos[$j]->nombre.'</p>';
+                    echo '<p class="tabla__body__p">'.$codigoAlmno.'</p>';
+                    echo '<p class="tabla__body__p">'.utf8_decode($nombreAlmno).'</p>';
                 }              
             }
             echo '</div>';
@@ -225,16 +223,14 @@
         }
     }           
 
-    /* XD */
-
     // Lista que obtiene todos los codigos disponibles y los alacena segun el prefijo
-    function crear_lista_alumnos_asignar($alumnos_2022_1){
+    function crear_lista_alumnos_asignar($alumnosMatriculados){
 
-        $alumnos_nuevos = ObtenerAlumnos_nuevos($alumnos_2022_1);
+        $alumnos_nuevos = ObtenerAlumnos_nuevos($alumnosMatriculados);
         global $alumnos_disponibles;
         $alumnos_disponibles = array_merge($alumnos_disponibles,$alumnos_nuevos);
         //$codigos obtiene los prefijos -> Ej (11,07,19,22,...)
-        $codigos = obtenerPrefijosCodigos($alumnos_2022_1);
+        $codigos = obtenerPrefijosCodigos($alumnosMatriculados);
 
 
         $listaAlumnosAsignar = array();
@@ -295,13 +291,13 @@
 
     //Función para asignar tutores a los alumnos sin tutoría
     function agregarAlumnosFaltantesAtutoria(){
-        // Obtener alumnos matriculados en el semestre 2022_1
-        $alumnos_2022_1 = actualizarCodigosa6Digitos(ObtenerAlumnos_2022_1('alumnos2022_1'));
+        // Obtener alumnos matriculados en el semestre actual
+        $alumnosMatriculados = actualizarCodigosa6Digitos(ObtenerAlumnosMatriculados('alumnosMatriculados'));
         // Obtener lista de objetos tutoria
-        $tutorias = ObtenerArregloTutorias('distribucionDocente', $alumnos_2022_1);
-        $lista_alumnos_asignar = crear_lista_alumnos_asignar($alumnos_2022_1);
+        $tutorias = ObtenerArregloTutorias('distribucionDocente', $alumnosMatriculados);
+        $lista_alumnos_asignar = crear_lista_alumnos_asignar($alumnosMatriculados);
         //Obtener cantidad de alumnos por tutoría
-        $limiteAlumnosPorTutoria = intdiv(count($alumnos_2022_1), count($tutorias));
+        $limiteAlumnosPorTutoria = intdiv(count($alumnosMatriculados), count($tutorias));
 
         //Obtener cantidad de tutorías
         $nroTutorias = count($tutorias);
@@ -339,7 +335,7 @@
                 }
             }
         }
-
+        
         //Ordenar alumnos de tutorados según código
         OrdenamientoResultados($tutorias);
         return $tutorias;
@@ -351,9 +347,10 @@
             for ($i = 0; $i < $longitud; $i++) {
                 for ($j = 0; $j < $longitud - 1; $j++) {
                     if ($tutoria->alumnos[$j]->codigo > $tutoria->alumnos[$j + 1]->codigo) {
-                        $temporal = $tutoria->alumnos[$j]->codigo;
-                        $tutoria->alumnos[$j]->codigo = $tutoria->alumnos[$j + 1]->codigo;
-                        $tutoria->alumnos[$j + 1]->codigo = $temporal;
+                        $temporal = $tutoria->alumnos[$j];
+                        $tutoria->alumnos[$j] = $tutoria->alumnos[$j + 1];
+                        $tutoria->alumnos[$j + 1] = $temporal;
+
                     }
                 }
             }
@@ -361,7 +358,7 @@
     }
 
     //Función para escribir un csv con los datos de los tutorados
-    function writeCsvTutorados2022($ruta, $tutorados){
+    function writeCsvTutoradosSemestreActual($ruta, $tutorados){
         //Abrir archivo csv
         $archivo = fopen($ruta, "w");
         //-------------------------------------------------Agregar contenido-------------------------------------------------
@@ -392,7 +389,7 @@
         //Iniciar variable
         $nroAlumno = 1; 
         //-------------------------------------------------Agregar contenido-------------------------------------------------
-        fputs($archivo, "Alumnos no considerados para tutoría en 2022-I,"); 
+        fputs($archivo, "Alumnos no considerados para tutoría en el semestre actual,"); 
         fputs($archivo, "\n#,Código,Nombres");
         //Recorrer alumnos
         for($indexAlumno = 0; $indexAlumno < count($alumnos); $indexAlumno++){
@@ -404,9 +401,9 @@
     
     //Agregar alumnos faltantes a tutoría
     $tutorias = agregarAlumnosFaltantesAtutoria(); 
-    //Crear archivo CSV con los tutorados para el 2022-I
-    writeCsvTutorados2022("../Resultados/DistribucionTutorados2022-I.csv", $tutorias);
-    //Crear archivo CSV con alumnos no tutorados en el 2022-I
+    //Crear archivo CSV con los tutorados para el semestre actual
+    writeCsvTutoradosSemestreActual("../Resultados/DistribucionTutorados2022-I.csv", $tutorias);
+    //Crear archivo CSV con alumnos no tutorados en el semestre actual
     writeCsvAlumnosNoConsiderados("../Resultados/AlumnosNoTutorados.csv", $alumnos_no_tutoria);
 ?>
 
@@ -431,7 +428,7 @@
     <div class="container">
 
         <div class="titulo">
-            <h1 class="titulo__h1">Distribucion de tutorias semestre 2022-1</h1>
+            <h1 class="titulo__h1">Distribucion de tutorias semestre actual</h1>
             <div class="titulo__cont">
                 <h1 class="titulo__h1 titulo__h1--extra">Color de nuevo tutorado</h1>
                 <div class="titulo__cuadradito"></div>
